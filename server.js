@@ -24,6 +24,66 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+/** MY SOLUTION **/
+/*
+app.get("/api/:date?", function(req, res) {
+  const { date } = req.params;
+  let unixTimestamp, utcTimestamp;
+
+  if (Number(date)) {
+    unixTimestamp = Number(date);
+    utcTimestamp = new Date(Number(date)).toUTCString();
+  } else if (date === undefined) {
+    unixTimestamp = new Date().getTime()
+    utcTimestamp = new Date().toUTCString()
+  } else {
+    unixTimestamp = new Date(date).getTime();
+    utcTimestamp = new Date(date).toUTCString();
+  }
+  if (!unixTimestamp) {
+    res.json({
+      error: utcTimestamp
+    });
+  } else {
+    res.json({
+      unix: unixTimestamp,
+      utc: utcTimestamp
+    });
+  }
+});
+
+*/
+
+/** FROM A DUC **/
+// https://bespokify.slack.com/archives/DJBRRKQET/p1628678065015800
+
+app.get("/api/:date?", function(req, res) {
+  const { date } = req.params;
+  let time = new Date();
+
+  if (typeof date === "string") {
+    if (Number(date)) {
+      time = new Date(Number(date));
+    } else {
+      time = new Date(date);
+    }
+  }
+
+  const unixTimestamp = time.getTime();
+  const utcTimestamp = time.toUTCString();
+
+  if (!unixTimestamp) {
+    res.json({
+      error: utcTimestamp
+    });
+    return;
+  }
+
+  res.json({
+    unix: unixTimestamp,
+    utc: utcTimestamp
+  });
+});
 
 
 // listen for requests :)
